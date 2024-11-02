@@ -1,0 +1,55 @@
+basePath: /
+definitions:
+  domain.CustomError:
+    description: An error that includes a specific code and a message with more details.
+    properties:
+      code:
+        example: error_code
+        type: string
+      message:
+        example: error message
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: moralesaksel@gmail.com
+    name: API Support
+  description: This is a migration service for Stori Challenge
+  title: Migration Service | API Docs
+  version: "1.0"
+paths:
+  /migrate:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Migrate csv file to database
+      parameters:
+      - description: CSV file to upload
+        in: formData
+        name: file
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: csv file stored in database
+          schema:
+            type: string
+        "400":
+          description: Bad request error
+          schema:
+            $ref: '#/definitions/domain.CustomError'
+        "409":
+          description: Conflict error
+          schema:
+            $ref: '#/definitions/domain.CustomError'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/domain.CustomError'
+      summary: Migrate csv file to database
+      tags:
+      - Migrate
+swagger: "2.0"

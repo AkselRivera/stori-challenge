@@ -1,0 +1,88 @@
+basePath: /
+definitions:
+  domain.CustomError:
+    description: An error that includes a specific code and a message with more details.
+    properties:
+      code:
+        type: string
+      message:
+        type: string
+    type: object
+  domain.UserBalance:
+    description: User balance details including balance, total debits and total credits
+    properties:
+      balance:
+        example: 25
+        type: number
+      total_credits:
+        example: 15
+        type: number
+      total_debits:
+        example: 10
+        type: number
+    type: object
+  health.health:
+    description: Detalles del estado de salud de la aplicación.
+    properties:
+      status:
+        example: ok
+        type: string
+    type: object
+host: localhost:8081
+info:
+  contact:
+    email: moralesaksel@gmail.com
+    name: API Support
+  description: This is a balance service for Stori Challenge
+  title: Balance Service | API Docs
+  version: "1.0"
+paths:
+  /health:
+    get:
+      description: Check if the service is up
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: The service is up
+          schema:
+            $ref: '#/definitions/health.health'
+      summary: Health Check
+      tags:
+      - Health
+  /user/{user_id}/balance:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve the balance of a user with optional date range.
+      parameters:
+      - description: User ID
+        in: path
+        name: user_id
+        required: true
+        type: integer
+      - description: Start date in RFC3339 format
+        example: 2006-01-02T15:04:05Z07:00
+        in: query
+        name: from
+        type: string
+      - description: End date in RFC3339 format
+        example: 2006-01-02T15:04:05Z07:00
+        in: query
+        name: to
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successful response with user balance
+          schema:
+            $ref: '#/definitions/domain.UserBalance'
+        "400":
+          description: Error response for invalid input
+          schema:
+            $ref: '#/definitions/domain.CustomError'
+      summary: Get user balance
+      tags:
+      - Balance
+swagger: "2.0"

@@ -1,0 +1,38 @@
+version: "3"
+
+services:
+  final-tech-db:
+    container_name: final-tech-db
+    image: postgres:14.1-alpine
+    environment:
+      POSTGRES_USER: postgres_admin
+      POSTGRES_PASSWORD: postgres_password
+      POSTGRES_DB: final_tech_db
+    ports:
+      - 5432:5432
+    volumes:
+      - ./.db:/var/lib/postgresql/data
+
+  migration-service:
+    container_name: migration-service
+    build:
+      context: ./migration-service
+      dockerfile: Dockerfile
+    env_file:
+      - .env 
+    ports:
+      - 8080:8080
+    depends_on:
+      - final-tech-db
+
+  balance-service:
+    container_name: balance-service
+    build:
+      context: ./balance-service
+      dockerfile: Dockerfile
+    env_file:
+      - .env 
+    ports:
+      - 8081:8081
+    depends_on:
+      - final-tech-db
