@@ -23,8 +23,10 @@ func ConnectToDB() (*gorm.DB, error) {
 			return db, nil
 		}
 
-		log.Infof("#%d failed to connect to database, retrying in 2 seconds...", i)
-		time.Sleep(2 * time.Second)
+		interval := time.Duration(i * 3)
+
+		log.Infof("#%d failed to connect to database, retrying in %d seconds...", i, interval)
+		time.Sleep(interval * time.Second)
 	}
 
 	return db, err
