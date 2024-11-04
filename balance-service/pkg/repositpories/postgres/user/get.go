@@ -3,7 +3,7 @@ package user
 import (
 	"time"
 
-	"github.com/AkselRivera/stori-challenge/balance-service/internal/domain"
+	"github.com/AkselRivera/stori-challenge/balance-service/pkg/domain"
 )
 
 func (r *Repository) GetUserTransactions(userID int, startDate time.Time, endDate time.Time) ([]domain.Transaction, error) {

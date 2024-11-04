@@ -3,7 +3,7 @@ package core
 import (
 	"errors"
 
-	"github.com/AkselRivera/stori-challenge/balance-service/internal/domain"
+	"github.com/AkselRivera/stori-challenge/balance-service/pkg/domain"
 	"github.com/gofiber/fiber/v2"
 )
 

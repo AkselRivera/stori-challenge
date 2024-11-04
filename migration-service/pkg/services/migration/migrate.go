@@ -11,14 +11,14 @@ func (s *Service) Migrate(transactions []*domain.Transaction, fileName string) (
 	title := "Good news, successful transactions migration!"
 	summay := fmt.Sprintf("Migrated <strong>%d</strong> transactions", len(transactions))
 
-	var err error
+	var globarlErr error
 
 	if err := s.Repo.InsertMany(transactions); err != nil {
 		domain.HandleError(err, "failed to insert transactions")
 		title = "Bad news, failed transactions migration!"
 		summay = "Could not migrate transactions"
 
-		err = domain.HandleError(err, "failed to insert transactions")
+		globarlErr = domain.HandleError(err, "failed to insert transactions")
 	}
 
 	body := fmt.Sprintf("<h1>FinTech Solutions Inc.</h1> <h2>Summary:</h2> <p>%s from <strong>%s</strong> file</p> <br/><br/>  <p>FinTech Solutions Inc. Development Team</p>", summay, fileName)
@@ -29,8 +29,8 @@ func (s *Service) Migrate(transactions []*domain.Transaction, fileName string) (
 		Body:    body,
 	}
 
-	s.EmailService.SendEmail(emailData)
+	s.Sender.Send(emailData)
 
-	return &emailData, err
+	return &emailData, globarlErr
 
 }

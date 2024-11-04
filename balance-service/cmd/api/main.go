@@ -5,9 +5,9 @@ import (
 
 	"github.com/AkselRivera/stori-challenge/balance-service/cmd/api/handlers/health"
 	"github.com/AkselRivera/stori-challenge/balance-service/cmd/api/handlers/user"
-	"github.com/AkselRivera/stori-challenge/balance-service/internal/repositpories/postgres"
-	userPostgres "github.com/AkselRivera/stori-challenge/balance-service/internal/repositpories/postgres/user"
-	userService "github.com/AkselRivera/stori-challenge/balance-service/internal/services/user"
+	"github.com/AkselRivera/stori-challenge/balance-service/pkg/repositpories/postgres"
+	userPostgres "github.com/AkselRivera/stori-challenge/balance-service/pkg/repositpories/postgres/user"
+	userService "github.com/AkselRivera/stori-challenge/balance-service/pkg/services/user"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/swagger"

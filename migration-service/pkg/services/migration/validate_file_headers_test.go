@@ -70,8 +70,8 @@ func TestService_Validate_File_Headers(t *testing.T) {
 			test.setup(mockRepo)
 
 			s := &migration.Service{
-				Repo:         mockRepo,
-				EmailService: nil,
+				Repo:   mockRepo,
+				Sender: nil,
 			}
 
 			err := s.ValidateFileHeaders(test.data)

@@ -3,7 +3,7 @@ package ports
 import (
 	"time"
 
-	"github.com/AkselRivera/stori-challenge/balance-service/internal/domain"
+	"github.com/AkselRivera/stori-challenge/balance-service/pkg/domain"
 )
 
 type UserService interface {

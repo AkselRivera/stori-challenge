@@ -121,8 +121,8 @@ func TestService_Validate_Data(t *testing.T) {
 			test.setup(mockRepo)
 
 			s := &migration.Service{
-				Repo:         mockRepo,
-				EmailService: nil,
+				Repo:   mockRepo,
+				Sender: nil,
 			}
 
 			transactions, err := s.ValidateData(test.data)

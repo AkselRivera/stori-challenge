@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/AkselRivera/stori-challenge/balance-service/cmd/api/core"
-	"github.com/AkselRivera/stori-challenge/balance-service/internal/domain"
+	"github.com/AkselRivera/stori-challenge/balance-service/pkg/domain"
 	"github.com/gofiber/fiber/v2"
 )
 

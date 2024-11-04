@@ -4,7 +4,7 @@ import (
 	"math"
 	"time"
 
-	"github.com/AkselRivera/stori-challenge/balance-service/internal/domain"
+	"github.com/AkselRivera/stori-challenge/balance-service/pkg/domain"
 )
 
 func (s *Service) GetBalance(userID int, startDate time.Time, endDate time.Time) (domain.UserBalance, error) {

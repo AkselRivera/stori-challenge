@@ -4,6 +4,7 @@ import (
 	"github.com/AkselRivera/stori-challenge/migration-service/cmd/api/handlers/health"
 	"github.com/AkselRivera/stori-challenge/migration-service/cmd/api/handlers/migration"
 	"github.com/AkselRivera/stori-challenge/migration-service/pkg/domain"
+	"github.com/AkselRivera/stori-challenge/migration-service/pkg/infrastructure/sender"
 	"github.com/AkselRivera/stori-challenge/migration-service/pkg/repositories/postgres"
 	migrationPostgres "github.com/AkselRivera/stori-challenge/migration-service/pkg/repositories/postgres/migration"
 	emailService "github.com/AkselRivera/stori-challenge/migration-service/pkg/services/email"
@@ -53,11 +54,21 @@ func main() {
 		Client: client,
 	}
 
+	resendClient := sender.ConnectResend()
+
+	// Add Infraestructure
+	emailSender := &sender.ResendEmailSender{
+		Client: resendClient,
+	}
+
 	// Add Services
-	emailSrv := &emailService.Service{}
+	emailSrv := &emailService.Service{
+		Sender: *emailSender,
+	}
+
 	migrationSrv := &migrationService.Service{
-		Repo:         migrationRepo,
-		EmailService: emailSrv,
+		Repo:   migrationRepo,
+		Sender: emailSrv,
 	}
 
 	// Add Handlers

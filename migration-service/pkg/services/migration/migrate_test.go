@@ -1,6 +1,7 @@
 package migration_test
 
 import (
+	"errors"
 	"testing"
 	"time"
 
@@ -19,7 +20,7 @@ func TestMigrate(t *testing.T) {
 		assertionFunc func(subTest *testing.T, email *domain.EmailData, err error)
 	}{
 
-		"success": {
+		"migration successful": {
 			setup: func(mock *mocks.MockMigrationRepository, mockEmailService *mocks.MockEmailService) {
 				mock.EXPECT().InsertMany(gomock.Any()).Do(func(t []*domain.Transaction) {
 					t[0].ID = 1
@@ -28,7 +29,7 @@ func TestMigrate(t *testing.T) {
 					t[0].DateTime = time.Date(2021, 1, 1, 0, 0, 0, 0, time.UTC)
 				}).Return(nil)
 
-				mockEmailService.EXPECT().SendEmail(gomock.Any()).Return(nil)
+				mockEmailService.EXPECT().Send(gomock.Any()).Return(nil)
 			},
 			data: []*domain.Transaction{
 				{
@@ -41,33 +42,37 @@ func TestMigrate(t *testing.T) {
 				assert.Nil(subTest, err)
 				assert.NotNil(subTest, email)
 
-				assert.Equal(subTest, "Good news, successful transactions migration!", email.Subject)
+				assert.Contains(subTest, "Good news, successful transactions migration!", email.Subject)
 			},
 		},
 
-		// "failed": {
-		// 	setup: func(mock *mocks.MockMigrationRepository) {
-		// 		mock.EXPECT().InsertMany(gomock.Any()).Do(func(t []*domain.Transaction) {
+		"migration failed": {
+			setup: func(mock *mocks.MockMigrationRepository, mockEmailService *mocks.MockEmailService) {
+				mock.EXPECT().InsertMany(gomock.Any()).Do(func(t []*domain.Transaction) {
 
-		// 		}).Return(errors.New("generic error"))
-		// 	},
-		// 	data: []*domain.Transaction{
-		// 		{
-		// 			UserID:   1,
-		// 			Amount:   1.1,
-		// 			DateTime: time.Date(2021, 1, 1, 0, 0, 0, 0, time.UTC),
-		// 		},
-		// 	},
-		// 	assertionFunc: func(subTest *testing.T, email *domain.EmailData, err error) {
-		// 		assert.NotNil(subTest, err)
-		// 		assert.Nil(subTest, email)
+				}).Return(errors.New("generic error"))
 
-		// 		var customErr domain.CustomError
-		// 		if errors.Is(err, &customErr) {
-		// 			assert.Equal(subTest, domain.ErrorCodeInternalServerError, customErr.Code)
-		// 		}
-		// 	},
-		// },
+				mockEmailService.EXPECT().Send(gomock.Any()).Return(nil)
+			},
+
+			data: []*domain.Transaction{
+				{
+					UserID:   1,
+					Amount:   1.1,
+					DateTime: time.Date(2021, 1, 1, 0, 0, 0, 0, time.UTC),
+				},
+			},
+
+			assertionFunc: func(subTest *testing.T, emailData *domain.EmailData, err error) {
+				assert.NotNil(subTest, err)
+				assert.Contains(subTest, emailData.Subject, "Bad news, failed transactions migration!")
+
+				var customErr domain.CustomError
+				if errors.Is(err, &customErr) {
+					assert.Equal(subTest, domain.ErrorCodeInternalServerError, customErr.Code)
+				}
+			},
+		},
 	}
 
 	for name, test := range testTable {
@@ -81,7 +86,7 @@ func TestMigrate(t *testing.T) {
 			mockEmailSrv := mocks.NewMockEmailService(ctrl)
 			test.setup(mockRepo, mockEmailSrv)
 
-			s := migration.Service{Repo: mockRepo, EmailService: mockEmailSrv}
+			s := migration.Service{Repo: mockRepo, Sender: mockEmailSrv}
 
 			emailData, err := s.Migrate(test.data, "file.csv")
 
