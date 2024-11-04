@@ -5,9 +5,9 @@ services:
     container_name: final-tech-db
     image: postgres:14.1-alpine
     environment:
-      POSTGRES_USER: postgres_admin
-      POSTGRES_PASSWORD: postgres_password
-      POSTGRES_DB: final_tech_db
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
     ports:
       - 5432:5432
     volumes:

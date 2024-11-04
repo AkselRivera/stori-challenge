@@ -10,6 +10,13 @@ definitions:
         example: error message
         type: string
     type: object
+  health.health:
+    description: Detalles del estado de salud de la aplicación.
+    properties:
+      status:
+        example: ok
+        type: string
+    type: object
 host: localhost:8080
 info:
   contact:
@@ -19,6 +26,19 @@ info:
   title: Migration Service | API Docs
   version: "1.0"
 paths:
+  /health:
+    get:
+      description: Check if the service is up
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: The service is up
+          schema:
+            $ref: '#/definitions/health.health'
+      summary: Health Check
+      tags:
+      - Health
   /migrate:
     post:
       consumes:
@@ -34,7 +54,8 @@ paths:
       - application/json
       responses:
         "200":
-          description: csv file stored in database
+          description: processing csv file in the background, you will receive an
+            email when the process is completed
           schema:
             type: string
         "400":

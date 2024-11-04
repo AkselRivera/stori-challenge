@@ -18,6 +18,26 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/health": {
+            "get": {
+                "description": "Check if the service is up",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Health"
+                ],
+                "summary": "Health Check",
+                "responses": {
+                    "200": {
+                        "description": "The service is up",
+                        "schema": {
+                            "$ref": "#/definitions/health.health"
+                        }
+                    }
+                }
+            }
+        },
         "/migrate": {
             "post": {
                 "description": "Migrate csv file to database",
@@ -42,7 +62,7 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "csv file stored in database",
+                        "description": "processing csv file in the background, you will receive an email when the process is completed",
                         "schema": {
                             "type": "string"
                         }
@@ -81,6 +101,16 @@ const docTemplate = `{
                 "message": {
                     "type": "string",
                     "example": "error message"
+                }
+            }
+        },
+        "health.health": {
+            "description": "Detalles del estado de salud de la aplicación.",
+            "type": "object",
+            "properties": {
+                "status": {
+                    "type": "string",
+                    "example": "ok"
                 }
             }
         }
