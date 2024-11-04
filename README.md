@@ -15,10 +15,11 @@ This project involves creating two essential API services to migrate historical 
 - [API](#api)
   - [Migration Service](#migration-service)
   - [Balance Service](#balance-service)
-- [Tests](#tests)
+- [Tests](#running-tests)
 - [Documentation](#documentation)
 - [Technologies Used](#technologies-used)
-- [Contributions](#contributions)
+- [Author](#author)
+- [Links](#links)
 
 ## Project Description
 
@@ -68,7 +69,7 @@ FinTech Solutions Inc. aims to improve data accessibility and transparency throu
 
 ## API
 
-Each services implements an endpoint to check if they are online, this is the `Health` endpoint.
+Each service implements an endpoint to check if they are online, this is the `Health` endpoint.
 
 - GET /health
   - Check if the service is online
@@ -78,12 +79,12 @@ Each services implements an endpoint to check if they are online, this is the `H
 
 - POST /migrate
   - Uploads a `CSV` file and processes the transactions.
-  - Response: If the `CSV` file is valids response `OK` Response otherwise it will return a `Bad Request` Response
+  - Response: If the `CSV` file is valid response `OK` Response otherwise it will return a `Bad Request` Response
   - Creates a goroutine and sends a summary of the results
 
 ### Balance Service
 
-- GET /balance
+- GET /user/{user_id}/balance
   - Returns a summary of user balance.
   - Response: Balance information in JSON format.
 
